@@ -117,7 +117,7 @@
                 </section>
 
                 <section>
-                    <h1>Tests</h1>
+                    <h1>In Tests we trust</h1>
                     <ul>
                         <li>Unit, Integration, UI</li>
                         <li>performance tests</li>
@@ -127,8 +127,11 @@
                 <section>
                     <h1>Expectations</h1>
                     <h2>2..5 week</h2>
-                    <h1>Reality</h1>
-                    <h2>3-4+ month</h2>
+                </section>
+
+                <section>
+                    <h1>Java changes</h1>
+                    <h3>NSD 4 Code adaptation</h3>
                 </section>
 
                 <section>
@@ -147,77 +150,252 @@
                 </section>
 
                 <section>
-                    <h1>Build failed</h1>                    
+                    <h1>Build failed</h1> 
+                    <ul>
+                        <li>GWT не поддерживает Java 8</li>
+                        <li>Указание типа при вызове Generic методов</li>
+                    </ul>                   
                 </section>
 
                 <section>
-                    <h1>Just 5 tests failed</h1>    
+                    <h1>Just 26 tests failed</h1>   
+                    <h3>из 6k+</h3>
+                    <h4>всего то</h4> 
                 </section>
 
                 <section>
-                    <h1>JAXB Surprise!</h1>
-                </section>
+                    <h1>Surprise: JAXB!</h1>
+<pre style="width:100%;"><code data-trim class="groovy">            
+@XmlRootElement
+public static final class Foo {
+    private ArrayList&lt;Bar&gt; bars = null;
 
-                <section>
-                    <h1>NSD 4 object attributes</h1>    
+    @XmlElementWrapper(name = "bars")
+    @XmlElement(name = "bar")
+    public List&lt;Bar&gt; getBars() {
+        return bars;
+    }
+
+    public void setBars(List&lt;Bar&gt; bars) {
+        if (bars == null) {
+            this.bars = null;
+        } else if (this.bars != bars) {
+            this.bars = new ArrayList&lt;&gt;(bars);
+        }
+    }
+}
+</code></pre>
+<a href="https://java.net/jira/browse/JAXB-948">JAXB-948</a>
+<a href="https://bugs.openjdk.java.net/browse/JDK-8010393">JDK-8010393</a> 
+<a href="https://java.net/jira/browse/JAXB-10511">JAXB-1051</a> 
                 </section>
 
                 <section>
                     <h1>NSD 4 Business operation</h1>    
+<pre style="width:100%;"><code data-trim class="groovy">            
+HashMap m = new HashMap()
+
+m.put('parent', '1')
+m.put('description', '4')
+m.put('source', '5')
+m.put('sourceFqn', '6')
+m.put('content', '7')
+m.put('parentUUID', '8')
+
+// редактирование объекта
+editObject(theObject, m);
+</code></pre>
                 </section>
 
                 <section>
                     <h1>NSD 4 Attribute priorities</h1>    
+<pre style="width:100%;"><code data-trim class="groovy">            
+/*
+m.put('parent', '1')
+m.put('description', '4')
+m.put('source', '5')
+m.put('sourceFqn', '6')
+m.put('content', '7')
+m.put('parentUUID', '8')
+*/
+
+// упорядочивание операций
+sortOperations()
+
+/*
+[parent, parentUUID, description, source, sourceFqn, content]
+*/
+</code></pre>
                 </section>
 
                 <section>
-                    <h1>NSD 4 Sorted attributes</h1>    
+                    <h1>HashMap</h1>
+<pre style="width:100%;"><code data-trim class="groovy">            
+
+HashMap m = new HashMap()
+
+m.put('parent', '1')
+m.put('description', '4')
+m.put('source', '5')
+m.put('sourceFqn', '6')
+m.put('content', '7')
+m.put('parentUUID', '8')
+
+m.keySet()
+/*
+J7: [content, sourceFqn, source, description, parent, parentUUID]
+J8: [parent, description, source, sourceFqn, content, parentUUID]
+*/
+</code></pre>
                 </section>
 
                 <section>
-                    <h1>HashMap Java 7</h1>
+                    <h3><a href="http://blog.takipi.com/benchmark-how-java-8-lambdas-and-streams-can-make-your-code-5-times-slower/">How Misusing Streams Can Make Your Code 5 Times Slower</a></h3>
+                    <img src="img/functional.benchmark.png" style="height: 30%"/>
                 </section>
 
                 <section>
-                    <h1>HashMap Java 8</h1>
+                    <h1>javac -target 1.7</h1>
+<pre style="width:100%;"><code data-trim class="java">
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+
+public class Hello {
+  public static void main(String[] args) {
+    ConcurrentHashMap&lt;String, String&gt; properties = new ConcurrentHashMap&lt;&gt;();
+    Set&lt;String&gt; keySet = properties.keySet();
+  }
+}
+</code></pre>
+<pre style="width:100%;"><code data-trim class="bash">
+/usr/lib/jvm/java-8-oracle/bin/javac -source 1.7 -target 1.7 Hello.java
+/usr/lib/jvm/java-7-oracle/bin/java Hello
+</code></pre>
                 </section>
 
                 <section>
-                    <h1>Stream API</h1>
+                    <h1>javac -target 1.7</h1>
+<pre style="width:100%;"><code data-trim class="java">
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+
+public class Hello {
+  public static void main(String[] args) {
+    ConcurrentHashMap&lt;String, String&gt; properties = new ConcurrentHashMap&lt;&gt;();
+    Set&lt;String&gt; keySet = properties.keySet();
+  }
+}
+</code></pre>
+<pre style="width:100%;"><code data-trim class="bash">
+/usr/lib/jvm/java-8-oracle/bin/javac -source 1.7 -target 1.7 Hello.java
+/usr/lib/jvm/java-7-oracle/bin/java Hello
+</code></pre>
+<pre style="width:100%; font-weight: bolder;"><code data-trim class="bash">
+Exception in thread "main" java.lang.NoSuchMethodError: 
+java.util.concurrent.ConcurrentHashMap.keySet();
+</code></pre>
                 </section>
 
                 <section>
                     <h1>Production testing</h1>
+<pre style="width:100%;"><code data-trim class="groovy">            
+J7: [content, sourceFqn, source, description, parent, parentUUID]
+J8: [parent, description, source, sourceFqn, content, parentUUID]
+</code></pre>
+<pre style="width:100%;"><code data-trim class="groovy"> 
+// скрипт вычисляет значение атрибута description
+return ''+source+''+sourceFqn;
+</code></pre>
                 </section>
 
                 <section>
-                    <h1>HashMap again</h1>
-                    <h2>Groovy AST to the rescue</h2>
+                    <h1>Production testing</h1>
+<pre style="width:100%;"><code data-trim class="groovy">            
+J7: [content, sourceFqn, source, description, parent, parentUUID]
+J8: [parent, description, source, sourceFqn, content, parentUUID]
+</code></pre>
+<pre style="width:100%;"><code data-trim class="groovy"> 
+@DependsOn('source,sourceFqn')
+// скрипт вычисляет значение атрибута description
+return ''+source+''+sourceFqn;
+</code></pre>
                 </section>
 
                 <section>
-                    <h1>Stream API performance issues</h1>
+                    <h1>JVM Changes</h1>
+                    <h3>new reality</h3>     
                 </section>
 
                 <section>
-                    <h1>In the middle</h1>    
-                    <ul>
-                        <li>lambda + final</li>
-                        <li>JDK8 HashMap is JRE 7 incompatable</li>
-                    </ul>
+                    <h1>Metaspace</h1>
+                    -XX:MaxMetaspaceSize=256m
                 </section>
 
                 <section>
                     <h1>NSD 4 Cloud</h1>
+                    100+ VM:
+                    <br/>
+                    <ul>
+                        <li>Ubuntu linux</li>
+                        <li>1-2 CPU</li>
+                        <li>2Gb RAM</li>
+                    </ul>
                 </section>
 
                 <section>
                     <h1>Memory leaks</h1>
+                    <ul>
+                        <li>OOM Killer</li>
+                        <li>JVM Crash: cannot allocate memory</li>
+                    </ul>
                 </section>
 
                 <section>
-                    <h1>Java 8 (re/de)serves more</h1>
-                    <h2>Memory region list</h2>
+                    <h1>Java 8 Memory</h1>
+                    <table>
+                        <thead>
+                            <th>Pool</th>
+                            <th>Max</th>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>PS Survivor Space</td>
+                                <td>24 MB</td>
+                            </tr>
+                            <tr>
+                                <td>PS Eden Space</td>
+                                <td>362.5 MB</td>
+                            </tr>
+                            <tr>
+                                <td>PS Old Gen</td>
+                                <td>820 MB</td>
+                            </tr>
+                            <tr>
+                                <td>Metaspace</td>
+                                <td>230 MB</td>
+                            </tr>
+                            <tr>
+                                <td>Code Cache</td>
+                                <td>240 MB</td>
+                            </tr>
+                            <tr>
+                                <td>Compressed Class Space</td>
+                                <td>1 GB</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section>
+                    <h1>Compressed Class Space</h1>
+<pre>
+-XX:-UseCompressedOops
+-XX:-UseCompressedClassPointers
+-XX:CompressedClassSpaceSize=1G
+</pre>                    
+<pre style="font-weight: bolder;">
+java.lang.OutOfMemoryError: Compressed class space
+</pre>
                 </section>
 
                 <section>
