@@ -299,25 +299,25 @@ java.util.concurrent.ConcurrentHashMap.keySet();
                 <section>
                     <h1>Production testing</h1>
 <pre style="width:100%;"><code data-trim class="groovy">            
-J7: [content, sourceFqn, source, description, parent, parentUUID]
-J8: [parent, description, source, sourceFqn, content, parentUUID]
+J7: [content, sourceFqn, source, state, description, parent, parentUUID]
+J8: [parent, state, description, source, sourceFqn, content, parentUUID]
 </code></pre>
 <pre style="width:100%;"><code data-trim class="groovy"> 
-// скрипт вычисляет значение атрибута description
-return ''+source+''+sourceFqn;
+// скрипт на вход в статус (изменение атрибута state)
+log.info(''+source+''+sourceFqn);
 </code></pre>
                 </section>
 
                 <section>
                     <h1>Production testing</h1>
 <pre style="width:100%;"><code data-trim class="groovy">            
-J7: [content, sourceFqn, source, description, parent, parentUUID]
-J8: [parent, description, source, sourceFqn, content, parentUUID]
+J7: [content, sourceFqn, source, state, description, parent, parentUUID]
+J8: [parent, description, source, sourceFqn, state, content, parentUUID]
 </code></pre>
 <pre style="width:100%;"><code data-trim class="groovy"> 
 @DependsOn('source,sourceFqn')
-// скрипт вычисляет значение атрибута description
-return ''+source+''+sourceFqn;
+// скрипт на вход в статус (изменение атрибута state)
+log.info(''+source+''+sourceFqn);
 </code></pre>
                 </section>
 
@@ -351,36 +351,43 @@ return ''+source+''+sourceFqn;
                 </section>
 
                 <section>
-                    <h1>Java 8 Memory</h1>
+                    <h1>Java 8 vs 7 Memory</h1>
                     <table>
                         <thead>
                             <th>Pool</th>
-                            <th>Max</th>
+                            <th>Java 8</th>
+                            <th>Java 7</th>
                         </thead>
                         <tbody>
                             <tr>
                                 <td>PS Survivor Space</td>
                                 <td>24 MB</td>
+                                <td>24 MB</td>
                             </tr>
                             <tr>
                                 <td>PS Eden Space</td>
+                                <td>362.5 MB</td>
                                 <td>362.5 MB</td>
                             </tr>
                             <tr>
                                 <td>PS Old Gen</td>
                                 <td>820 MB</td>
+                                <td>820 MB</td>
                             </tr>
                             <tr>
-                                <td>Metaspace</td>
+                                <td>Metaspace/PermGen</td>
+                                <td>230 MB</td>
                                 <td>230 MB</td>
                             </tr>
                             <tr>
-                                <td>Code Cache</td>
-                                <td>240 MB</td>
+                                <td><b>Code Cache</b></td>
+                                <td><b>240 MB</b></td>
+                                <td><b>48 MB</b></td>
                             </tr>
                             <tr>
-                                <td>Compressed Class Space</td>
-                                <td>1 GB</td>
+                                <td><b>Compressed Class Space</b></td>
+                                <td><b>1 GB</b></td>
+                                <td><b>0</b></td>
                             </tr>
                         </tbody>
                     </table>
@@ -399,41 +406,152 @@ java.lang.OutOfMemoryError: Compressed class space
                 </section>
 
                 <section>
+                    <h1>Code cache</h1>
+<pre>
+-XX:ReservedCodeCacheSize=48m
+-XX:InitialCodeCacheSize=48m
+</pre>
+                </section>
+
+                <section>
                     <h1>Native Memory Tracking</h1>
+<pre>
+-XX:NativeMemoryTracking=summary
+-XX:NativeMemoryTracking=details
+</pre>
+<pre>
+jcmd PID VM.native_memory baseline 
+jcmd PID VM.native_memory summary.diff
+jcmd PID VM.native_memory detail.diff
+</pre>
+                </section>
+
+                <section style="margin-top: -30px; margin-left: -80px;">
+<pre>
+Total: reserved=2996914KB +94723KB, committed=1844886KB +164155KB
+-                 Java Heap (reserved=1259520KB, committed=1259520KB)
+                            (mmap: reserved=1259520KB, committed=1259520KB)
+
+</pre>
+<pre style="font-weight: bolder;">
+-                     Class (reserved=1259566KB +72758KB, committed=235910KB +80438KB)
+                            (classes #34708 +7329)
+                            (malloc=8238KB +3126KB #105182 +59942)
+                            (mmap: reserved=1251328KB +69632KB, committed=227672KB +77312KB)
+</pre>
+<pre>
+
+-                    Thread (reserved=82225KB +6766KB, committed=82225KB +6766KB)
+                            (thread #154 +13)
+                            (stack: reserved=81508KB +6708KB, committed=81508KB +6708KB)
+                            (malloc=506KB +43KB #768 +65)
+                            (arena=211KB +15 #306 +26)
+
+-                      Code (reserved=276771KB +13456KB, committed=148399KB +75208KB)
+                            (malloc=27171KB +13456KB #32967 +13362)
+                            (mmap: reserved=249600KB, committed=121228KB +61752KB)
+
+-                        GC (reserved=48393KB +23KB, committed=48393KB +23KB)
+                            (malloc=2369KB +23KB #1915 +731)
+                            (mmap: reserved=46024KB, committed=46024KB)
+ 
+-                  Compiler (reserved=592KB +146KB, committed=592KB +146KB)
+                            (malloc=461KB +146KB #964 +280)
+                            (arena=131KB #3)
+</pre>
+                </section>
+                
+                <section>
+                    <h1>Groovy leak</h1>
+                    <p>
+                        <a href="https://issues.apache.org/jira/browse/GROOVY-7683">GROOVY-7683 Memory leak when using Groovy as JSR-223 scripting language.</a>
+                        <br/>
+                        <a href="https://bugs.openjdk.java.net/browse/JDK-8136353">JDK-8136353 ClassValue preventing class unloading</a>
+                    </p>
+                </section>
+
+                <section>
+                    <h1>ClassValue</h1>
+                    <p>
+                        java.lang.ClassValue
+                        <br/>
+                        <a href="https://bugs.openjdk.java.net/browse/JDK-6389107">JDK-6389107 Request Reference.link(Object,Object) for "biweak" caches</a>
+                    </p>
+
+<pre style="width:auto;"><code data-trim class="java">
+// trivial cache that prevents GC to unload classes
+Map&lt;Class&lt;?&gt;, T&gt;
+// weak references as keys don't help GC to unload classes
+WeakHashMap&lt;Class&lt;?&gt;, T&gt;
+// the solution
+ClassValue&lt;T&gt; cache;
+</code></pre>
                 </section>
 
                 <section>
                     <h1>Groovy leak</h1>
+                    <p>
+                        <a href="https://issues.apache.org/jira/browse/GROOVY-7683">GROOVY-7683 Memory leak when using Groovy as JSR-223 scripting language.</a>
+                        <br/>
+                        <a href="https://bugs.openjdk.java.net/browse/JDK-8136353">JDK-8136353 ClassValue preventing class unloading</a>
+                    </p>
+                </section>
+
+                <section>
+                    <h1>ClassValue doesn't leak</h1>
+                    <img src="img/ClassValueisnotleak.png"/>
                 </section>
 
                 <section>
                     <h1>Load Average got high</h1>
+                    <img src="img/la_high.png" style="height:auto; width: auto; max-width: 1400px; margin-left: -200px;" />
                 </section>
 
                 <section>
-                    <h1>JIT Compiler troubleshooting</h1>
-                    <h2>Log in emergency case</h2>
+                    <h1>C1, C2 Compilers</h1>
+Jstack:
+<pre>
+"C1 CompilerThread2" #8 daemon prio=9
+   java.lang.Thread.State: RUNNABLE
+
+"C2 CompilerThread1" #7 daemon prio=9
+   java.lang.Thread.State: RUNNABLE
+
+"C2 CompilerThread0" #6 daemon prio=9
+   java.lang.Thread.State: RUNNABLE   
+</pre>
+Catalina.out
+<pre>
+Java HotSpot(TM) 64-Bit Server VM warning: 
+CodeCache is full. Compiler has been disabled.
+Java HotSpot(TM) 64-Bit Server VM warning:
+Try increasing the code cache size using -XX:ReservedCodeCacheSize=
+</pre>
                 </section>
 
                 <section>
-                    <h1>JIT Compiler troubleshooting</h1>
-                    <h2>Region usage</h2>
+                    <h1>Tiered Compilation enabled</h1>
+Java 8 defaults:
+                    <pre>
+-XX:+TieredCompilation
+-XX:ReservedCodeCacheSize=240m
+                    </pre>
+48m нехватит для C1 и C2
+                    <pre>
+-XX:ReservedCodeCacheSize=48m
+                    </pre>
                 </section>
 
                 <section>
-                    <h1>JIT Compiler troubleshooting</h1>
-                    <h2>Tunning options</h2>
+                    <h1>CodeCache 48m</h1>
+                    <img src="img/la_cc.png" style="height:auto; width: auto; max-width: 1400px; margin-left: -200px; margin-top: -10px" />
+                    <img src="img/codecache.png" style="height:auto; width: auto; max-width: 1400px; margin-left: -212px; margin-top: -180px" />
                 </section>
 
                 <section>
-                    <h1>Surprise! Leak again</h1>
-                    <h2>Ongoin investigation</h2>
-                    
-                    <ul>
-                        <li>Jemalloc</li>
-                        <li>Memory fragmentation</li>
-                    </ul>
-                    
+                    <h1>CodeCache 100m</h1>
+                    <img src="img/la_100.png" style="height:auto; width: auto; max-width: 1400px; margin-left: -200px; margin-top: -10px" />
+                    <img src="img/cc_100.png" style="height:auto; width: auto; max-width: 1400px; margin-left: -200px; margin-top: -130px" />
                 </section>
 
                 <section>
