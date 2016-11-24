@@ -185,9 +185,13 @@ Utils.isEmpty(dataProvider.&lt;String&gt;getValue(2));
 
                 <section>
                     <h1>Surprise: JAXB!</h1>
-<pre style="width:100%; margin-bottom: 0px;"><code data-trim class="groovy">            
-@XmlType(name = "NotFilter")
-@XmlAccessorType(XmlAccessType.PROPERTY)
+                    <span style="margin-top: -20px;">
+                    <a href="https://java.net/jira/browse/JAXB-948">JAXB-948</a>
+                    <a href="https://bugs.openjdk.java.net/browse/JDK-8010393">JDK-8010393</a> 
+                    <a href="https://java.net/jira/browse/JAXB-10511">JAXB-1051</a> 
+                    </span>
+<pre style="width:100%; margin-top: 0px;"><code data-trim class="groovy">            
+@XmlType(name = "NotFilter") @XmlAccessorType(XmlAccessType.PROPERTY)
 public class NotFilter
 {
     private IObjectFilter filter;
@@ -199,7 +203,8 @@ public class NotFilter
     }
     @Override
     public List&lt;IObjectFilter&gt; getFilters(){
-        return filter == null ? new ArrayList&lt;IObjectFilter&gt;() : newArrayList(filter);
+        return filter == null ? 
+            new ArrayList&lt;IObjectFilter&gt;():newArrayList(filter);
     }
 
     @Override
@@ -207,9 +212,6 @@ public class NotFilter
         this.filter = getFirst(filters, null);
     }
 }</code></pre>
-<a href="https://java.net/jira/browse/JAXB-948">JAXB-948</a>
-<a href="https://bugs.openjdk.java.net/browse/JDK-8010393">JDK-8010393</a> 
-<a href="https://java.net/jira/browse/JAXB-10511">JAXB-1051</a> 
                 </section>
 
                 <section>
@@ -585,7 +587,7 @@ echo $nids
 
                 <section>
                     <h1>NSD 4 In Flames</h1>
-                    <img src="img/rest-trans-26-09-2016-flame.svg"/>
+                    <img src="img/rest-trans-26-09-2016-flame.png"/>
                 </section>
 
                 <section>
@@ -599,15 +601,19 @@ echo $nids
                     <img src="img/la_100.png" style="height:auto; width: auto; max-width: 1400px; margin-left: -200px; margin-top: -10px" />
                     <img src="img/cc_100.png" style="height:auto; width: auto; max-width: 1400px; margin-left: -200px; margin-top: -130px" />
                 </section>
-
+                
+                <section>
+                    <h1>MemoryPool MBean</h1>
+                    <img src="img/MemoryPool.png">    
+                </section>
+                
                 <section>
                     <h1>LogCompilation</h1>
-                    <pre>
--XX:+UnlockDiagnosticVMOptions
--XX:+TraceClassLoading
--XX:+LogCompilation
+                    <pre style="margin-bottom: 0px;">
+-XX:+UnlockDiagnosticVMOptions -XX:+TraceClassLoading -XX:+LogCompilation
                     </pre>                    
-                    <a href="https://github.com/AdoptOpenJDK/jitwatch">JITWatch</a>
+                    <a href="https://github.com/AdoptOpenJDK/jitwatch">github.com/AdoptOpenJDK/jitwatch</a>
+                    <img src="img/JITWatchCC.png"/>
                 </section>
 
                 <section>
