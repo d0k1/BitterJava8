@@ -214,6 +214,31 @@ public class NotFilter
                 </section>
 
                 <section>
+                    <h1>JAXB: решение</h1>
+<pre style="width:100%; margin-top: 0px;"><code data-trim class="groovy">            
+@XmlType(name = "NotFilter") @XmlAccessorType(XmlAccessType.PROPERTY)
+public class NotFilter
+{
+    private List&lt;IObjectFilter&gt; filters;
+
+    public NotFilter(IObjectFilter filter) {
+        this.filters = newArrayList(filter);
+    }
+    public IObjectFilter getFilter() {
+        return filters == null ? null : filters.get(0);
+    }
+    @Override
+    public List&lt;IObjectFilter&gt; getFilters(){
+        return filters;
+    }
+
+    @Override
+    public void setFilters(List&lt;IObjectFilter&gt; filters){
+        this.filter = getFirst(filters, null);
+    }
+}</code></pre>
+                </section>
+                <section>
                     <h1>NSD 4 Business operation</h1>    
 <pre style="width:100%;"><code data-trim class="groovy">            
 HashMap m = new HashMap()
@@ -234,18 +259,15 @@ editObject(theObject, m);
                     <h1>NSD 4 Attribute priorities</h1>    
 <pre style="width:100%;"><code data-trim class="groovy">            
 /*
-m.put('parent', '1')
-m.put('description', '4')
-m.put('source', '5')
-m.put('sourceFqn', '6')
-m.put('content', '7')
-m.put('parentUUID', '8')
+Исходная последовательность атрибутов для заполнения
+[parent, description, source, sourceFqn, content, parentUUID]
 */
 
 // упорядочивание операций
 sortOperations()
 
 /*
+Отсортированная последовательность атрибутов с учетом зависимостей
 [parent, parentUUID, description, source, sourceFqn, content]
 */
 </code></pre>
@@ -450,6 +472,7 @@ jcmd PID VM.native_memory detail.diff
                 </section>
 
                 <section style="margin-top: -30px; margin-left: -80px;">
+                    <h1>NMT output</h1>
 <pre>
 Total: reserved=2996914KB +94723KB, committed=1844886KB +164155KB
 -                 Java Heap (reserved=1259520KB, committed=1259520KB)
@@ -474,13 +497,6 @@ Total: reserved=2996914KB +94723KB, committed=1844886KB +164155KB
                             (malloc=27171KB +13456KB #32967 +13362)
                             (mmap: reserved=249600KB, committed=121228KB +61752KB)
 
--                        GC (reserved=48393KB +23KB, committed=48393KB +23KB)
-                            (malloc=2369KB +23KB #1915 +731)
-                            (mmap: reserved=46024KB, committed=46024KB)
- 
--                  Compiler (reserved=592KB +146KB, committed=592KB +146KB)
-                            (malloc=461KB +146KB #964 +280)
-                            (arena=131KB #3)
 </pre>
                 </section>
                 
@@ -577,10 +593,26 @@ Java 8 defaults:
 <pre style="width:auto;"><code data-trim class="bash">
 # самые активные потоки java
 ps -e -Topcpu,pid,tid,rss,args=| grep java| grep -v grep | sort -n -r -k1
-# найденные на предыдущем шаге идентификаторы
-pids='30260 30261' 
-nids=`for i in $tids; do echo "obase=16; $i" | bc | tr '[:upper:]' '[:lower:]'; done`
-echo $nids
+</code></pre>
+<pre style="width:120%;"><code data-trim class="bash">
+jstack | less
+
+"Thread-16537" #67118 daemon prio=5 os_prio=0 tid=0x00007f9c640b3000 nid=0x3bfa
+   java.lang.Thread.State: RUNNABLE
+    at sun.misc.Unsafe.getInt(Native Method)
+    at sun.security.provider.ByteArrayAccess.b2iBig64(ByteArrayAccess.java:274)
+
+"http-bio-8080-exec-83" #66731 daemon prio=5 os_prio=0 tid=0x00007f9cf4026000 nid=0x589
+   java.lang.Thread.State: RUNNABLE
+    at sun.misc.Unsafe.getObjectVolatile(Native Method)
+    at java.util.concurrent.ConcurrentHashMap.tabAt(ConcurrentHashMap.java:755)
+    at java.util.concurrent.ConcurrentHashMap.get(ConcurrentHashMap.java:938)
+
+"http-bio-8080-exec-82" #66730 daemon prio=5 os_prio=0 tid=0x00007f9cf4032000 nid=0x588
+   java.lang.Thread.State: RUNNABLE
+    at java.lang.String.hashCode(String.java:1466)
+    at java.util.HashMap.hash(HashMap.java:338)
+    at java.util.HashMap.put(HashMap.java:611)
 </code></pre>
                 </section>
 
@@ -591,14 +623,14 @@ echo $nids
 
                 <section>
                     <h1>CodeCache 48m</h1>
-                    <img src="img/la_cc.png" style="height:auto; width: auto; max-width: 1400px; margin-left: -200px; margin-top: -10px" />
-                    <img src="img/codecache.png" style="height:auto; width: auto; max-width: 1400px; margin-left: -212px; margin-top: -180px" />
+                    <img src="img/la_cc_2.png" style="height:auto; width: auto; max-width: 1400px; margin-left: -200px; margin-top: -10px" />
+                    <img src="img/codecache_2.png" style="height:auto; width: auto; max-width: 1400px; margin-left: -200px; margin-top: -130px" />
                 </section>
 
                 <section>
                     <h1>CodeCache 100m</h1>
-                    <img src="img/la_100.png" style="height:auto; width: auto; max-width: 1400px; margin-left: -200px; margin-top: -10px" />
-                    <img src="img/cc_100.png" style="height:auto; width: auto; max-width: 1400px; margin-left: -200px; margin-top: -130px" />
+                    <img src="img/la_100_2.png" style="height:auto; width: auto; max-width: 1400px; margin-left: -200px; margin-top: -10px" />
+                    <img src="img/cc_100_2.png" style="height:auto; width: auto; max-width: 1400px; margin-left: -200px; margin-top: -130px" />
                 </section>
                 
                 <section>
