@@ -475,27 +475,26 @@ jcmd PID VM.native_memory detail.diff
                     <h1>NMT output</h1>
 <pre>
 Total: reserved=2996914KB +94723KB, committed=1844886KB +164155KB
--                 Java Heap (reserved=1259520KB, committed=1259520KB)
-                            (mmap: reserved=1259520KB, committed=1259520KB)
-
+      Java Heap (reserved=1259520KB, committed=1259520KB)
+                (mmap: reserved=1259520KB, committed=1259520KB)
 </pre>
 <pre style="font-weight: bolder;">
--                     Class (reserved=1259566KB +72758KB, committed=235910KB +80438KB)
-                            (classes #34708 +7329)
-                            (malloc=8238KB +3126KB #105182 +59942)
-                            (mmap: reserved=1251328KB +69632KB, committed=227672KB +77312KB)
+          Class (reserved=1259566KB +72758KB, committed=235910KB +80438KB)
+                (classes #34708 +7329)
+                (malloc=8238KB +3126KB #105182 +59942)
+                (mmap: reserved=1251328KB +69632KB, committed=227672KB +77312KB)
 </pre>
 <pre>
 
--                    Thread (reserved=82225KB +6766KB, committed=82225KB +6766KB)
-                            (thread #154 +13)
-                            (stack: reserved=81508KB +6708KB, committed=81508KB +6708KB)
-                            (malloc=506KB +43KB #768 +65)
-                            (arena=211KB +15 #306 +26)
+         Thread (reserved=82225KB +6766KB, committed=82225KB +6766KB)
+                (thread #154 +13)
+                (stack: reserved=81508KB +6708KB, committed=81508KB +6708KB)
+                (malloc=506KB +43KB #768 +65)
+                (arena=211KB +15 #306 +26)
 
--                      Code (reserved=276771KB +13456KB, committed=148399KB +75208KB)
-                            (malloc=27171KB +13456KB #32967 +13362)
-                            (mmap: reserved=249600KB, committed=121228KB +61752KB)
+           Code (reserved=276771KB +13456KB, committed=148399KB +75208KB)
+                (malloc=27171KB +13456KB #32967 +13362)
+                (mmap: reserved=249600KB, committed=121228KB +61752KB)
 
 </pre>
                 </section>
@@ -504,10 +503,10 @@ Total: reserved=2996914KB +94723KB, committed=1844886KB +164155KB
                     <h1>Groovy leak</h1>
                     NMT
 <pre style="font-weight: bolder;">
--     Class (reserved=1259566KB +72758KB, committed=235910KB +80438KB)
-            (classes #34708 +7329)
-            (malloc=8238KB +3126KB #105182 +59942)
-            (mmap: reserved=1251328KB +69632KB, committed=227672KB +77312KB)
+Class (reserved=1259566KB +72758KB, committed=235910KB +80438KB)
+      (classes #34708 +7329)
+      (malloc=8238KB +3126KB #105182 +59942)
+      (mmap: reserved=1251328KB +69632KB, committed=227672KB +77312KB)
 </pre>
                     <p>
                         <a href="https://issues.apache.org/jira/browse/GROOVY-7683">GROOVY-7683 Memory leak when using Groovy as JSR-223 scripting language.</a>
@@ -550,7 +549,7 @@ ClassValue&lt;T&gt; cache;
 
                 <section>
                     <h1>Load Average got high</h1>
-                    <img src="img/la_high.png" style="height:auto; width: auto; max-width: 1400px; margin-left: -200px;" />
+                    <img src="img/la_high.png" style="height:auto; width: auto; max-width: 1400px; margin-left: -40px;" />
                 </section>
 
                 <section>
@@ -618,14 +617,14 @@ jstack | less
 
                 <section>
                     <h1>CodeCache 48m</h1>
-                    <img src="img/la_cc_2.png" style="height:auto; width: auto; max-width: 1400px; margin-left: -200px; margin-top: -10px" />
-                    <img src="img/codecache_2.png" style="height:auto; width: auto; max-width: 1400px; margin-left: -200px; margin-top: -130px" />
+                    <img src="img/la_cc_2.png" style="height:auto; width: auto; max-width: 1400px; margin-left: -40px; margin-top: -10px" />
+                    <img src="img/codecache_2.png" style="height:auto; width: auto; max-width: 1400px; margin-left: -40px; margin-top: -130px" />
                 </section>
 
                 <section>
                     <h1>CodeCache 100m</h1>
-                    <img src="img/la_100_2.png" style="height:auto; width: auto; max-width: 1400px; margin-left: -200px; margin-top: -10px" />
-                    <img src="img/cc_100_2.png" style="height:auto; width: auto; max-width: 1400px; margin-left: -200px; margin-top: -130px" />
+                    <img src="img/la_100_2.png" style="height:auto; width: auto; max-width: 1400px; margin-left: -40px; margin-top: -10px" />
+                    <img src="img/cc_100_2.png" style="height:auto; width: auto; max-width: 1400px; margin-left: -40px; margin-top: -130px" />
                 </section>
                 
                 <section>
