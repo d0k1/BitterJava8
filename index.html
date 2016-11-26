@@ -119,7 +119,7 @@
                     <h1>In Tests we trust</h1>
                     <ul>
                         <li>Unit, Integration, UI</li>
-                        <li>performance tests</li>
+                        <li>Performance tests</li>
                     </ul>
                 </section>
 
@@ -234,7 +234,7 @@ public class NotFilter
 
     @Override
     public void setFilters(List&lt;IObjectFilter&gt; filters){
-        this.filter = getFirst(filters, null);
+        this.filters = filters;
     }
 }</code></pre>
                 </section>
@@ -617,11 +617,6 @@ jstack | less
                 </section>
 
                 <section>
-                    <h1>NSD 4 In Flames</h1>
-                    <img src="img/rest-trans-26-09-2016-flame.png"/>
-                </section>
-
-                <section>
                     <h1>CodeCache 48m</h1>
                     <img src="img/la_cc_2.png" style="height:auto; width: auto; max-width: 1400px; margin-left: -200px; margin-top: -10px" />
                     <img src="img/codecache_2.png" style="height:auto; width: auto; max-width: 1400px; margin-left: -200px; margin-top: -130px" />
@@ -647,16 +642,16 @@ jstack | less
                     <h2>Expectations</h2>
                     <h3>2..5 week</h3>
                     <h2>Reality</h2>
-                    <h3>4+ moths</h3>
+                    <h3>5+ months</h3>
                 </section>
 
                 <section>
                     <h1>Recap</h1>
                     <ul>
                         <li>Oracle не нарушает контракты JDK</li>
-                        <li>Нет тестов - нет перехода на Java 8</li>
-                        <li>Цена перехода неизвеста, и большая часть сокрыта</li>
-                        <li>JVM многое о себе сообщает, главное - "услышать"</li>
+                        <li>Без тестов переход более болезненный</li>
+                        <li>Изменения в поведении JVM не протестировать</li>
+                        <li>JVM многое о себе сообщает, но не всегда явно</li>
                         <li>Java MBeans</li>
                         <li>Native memory tracking</li>
                         <li>LogCompilation/JITWatch</li>
@@ -665,7 +660,7 @@ jstack | less
 
                 <section>
                     <h1>tnx</h1>      
-                    Slides: <a href="http://bit.ly/bitter-java-8">http://bit.ly/bitter-java-8</a>
+                    <a href="http://bit.ly/bitter-java-8">http://bit.ly/bitter-java-8</a>
                     <img src="img/create_future.jpg"/>
                 </section>
 <!--
